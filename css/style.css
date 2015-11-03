@@ -1,0 +1,39 @@
+body, #map-canvas {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	z-index: 1;
+	
+	margin: 0px;
+}
+.container {
+	position: absolute;
+	margin-left: 5px;
+	margin-top: 5px;
+	z-index: 3;
+}
+.nav-search {
+	border: solid 2px blue;
+	background-color: white;
+	width: 280px;
+	max-height: 600px;
+}
+li {
+	font-family: Helvetica, sans-serif;
+	font-size: 12px;
+}
+li:hover {
+	background-color: #7D7D7D;
+	color: white;
+}
+#input {
+	color: black;
+	font-size: 14px;
+	-webkit-box-shadow: 2px 2px 5px #gray;
+	height: 30px;
+	width: 80%;
+	margin: 15px 0 5px 20px;
+}
+#resetMap {
+	
+}
