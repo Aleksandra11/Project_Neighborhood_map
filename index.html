@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Interesting Places near Richmond</title>
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+		<style>
+		</style>
+		<div id="map-canvas"></div>
+		<div class="container">
+			<div class="nav-search">
+				<span class="toggle" data-bind="text: toggleSign, click: listToggle"></span>
+				<input id="input" placeholder="Find your place...." type="input" data-bind="textInput: filter, event: {keyup: filterMarkers}"></input>
+				<div id="list">
+					<ul data-bind="visible: toggleSign()==='hide', foreach: visiblePlaces">
+						<a href="#" data-bind="click: $parent.showInfo, css: {}">
+							<li data-bind="click: $parent.showInfo">
+								<strong data-bind="text: name"></strong>
+								<p data-bind="text: city"></p>
+							</li>
+						</a>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		<div class="reset">
+			<!--<button id="resetMap">Reset map></button>-->
+			<img id="resetMap" src="img/resetbut.jpg" alt="Reset Logo">
+		</div>
+
+		<script src="js/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+		<script type="text/javascript" src="js/knockout-3.2.0.js"></script>
+		<script async type="text/javascript" src="js/app1.js"></script>
+	</body>
+</html>
