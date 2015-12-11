@@ -2,39 +2,46 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Interesting Places near Richmond</title>
+		<title>Interesting Places near Richmond, VA</title>
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<style>
-		</style>
 		<div id="map-canvas"></div>
+		<h2 id="title" data-bind="text: changeTitle"></h2>
 		<div class="container">
 			<div class="nav-search">
 				<span class="toggle" data-bind="text: toggleSign, click: listToggle"></span>
-				<input id="input" placeholder="Find your place...." type="input" data-bind="textInput: filter, event: {keyup: filterMarkers}"></input>
+				<input class="controls" placeholder="Find your place...." type="text" data-bind="textInput: filter, event: {keyup: filterMarkers}">
 				<div id="list">
 					<ul data-bind="visible: toggleSign()==='hide', foreach: visiblePlaces">
-						<a href="#" data-bind="click: $parent.showInfo, css: {}">
-							<li data-bind="click: $parent.showInfo">
-								<strong data-bind="text: name"></strong>
-								<p data-bind="text: city"></p>
-							</li>
-						</a>
+						<li data-bind="click: $parent.showInfo">
+							<img id="flickr" src="img/flikr.png" alt="Flickr Logo" data-bind="click: $parent.getFlickr">
+							<strong data-bind="text: name"></strong>
+							<p data-bind="text: city"></p>
+						</li>
 					</ul>
 				</div>
 			</div>
-			
 		</div>
 		<div class="reset">
-			<!--<button id="resetMap">Reset map></button>-->
 			<img id="resetMap" src="img/resetbut.jpg" alt="Reset Logo">
 		</div>
+		<!-- ko if: lightboxVisible -->
+		<div class="modal">
+			<div id="lightbox" data-bind="visible: lightboxVisible(true)">
+				<img data-bind="attr:{src: lightboxUrl}" alt="Photo from Flickr"/>
+				<div id="hoverImage">
+					<a id="prevLink" href="#" data-bind="click: prevPhoto"></a>
+					<a id="nextLink" href="#" data-bind="click: nextPhoto"></a>
+				</div>
+				<a id="close" href="#" data-bind="click: closeLightbox" title="Close">x</a>
+			</div>
+		</div>
+		<!-- /ko -->
 
-		<script src="js/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+  		<script src="js/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
 		<script type="text/javascript" src="js/knockout-3.2.0.js"></script>
 		<script async type="text/javascript" src="js/app1.js"></script>
 	</body>
