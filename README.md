@@ -4,11 +4,9 @@ Using Knockout framework, Google Maps API,Google StreetView API, Fouresquare API
 *View the live version of the map *[here.](http://aleksandra11.github.io/Project_Neighborhood_map/)
 How to use
 ----------------------------
->
 On the map you can chose a locations by clicking on a marker directly or filtering the list and enjoy the unique useful information about the locations including beautiful photos from Flickr feeds displayed in a lightbox manner.
 In case if something went wrong when downloading the map or pulling information from different API calls the messages will show up to inform the users that the data cant'be loaded at that time.
->
->
+
 Resources
 ----------------------------
 * [Udacity AJAX Course](http://udacity.com)
