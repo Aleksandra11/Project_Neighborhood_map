@@ -1,5 +1,5 @@
-# Project_Neighborhood_Map
-============================
+## Project_Neighborhood_Map
+--------------------------
 Using Knockout framework, Google Maps API,Google StreetView API, Fouresquare API and Flickr API, create an application featuring a neighborhood map of interesting places to visit. 
 *View the live version of the map *[here.](http://aleksandra11.github.io/Project_Neighborhood_map/)
 How to use
@@ -11,7 +11,7 @@ Resources
 ----------------------------
 * [Udacity AJAX Course](http://udacity.com)
 * [Knockout JS Documentation](http://knockoutjs.com/documentation/visible-binding.html)
-* Google Maaps API
+* Google Maps API
 * Google StreetView API
 * StackOverflow
 * [Foursquare API](https://developer.foursquare.com/)
