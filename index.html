@@ -13,11 +13,11 @@
 			<div class="nav-search">
 				<span class="toggle" data-bind="text: toggleSign, click: listToggle"></span>
 				<input class="controls" placeholder="Find your place...." type="text" data-bind="textInput: filter, event: {keyup: filterMarkers}">
-				<div id="list">
+				<div class="list">
 					<ul data-bind="visible: toggleSign()==='hide', foreach: visiblePlaces">
-						<li data-bind="click: $parent.showInfo">
-							<img id="flickr" src="img/flikr.png" alt="Flickr Logo" data-bind="click: $parent.getFlickr">
-							<strong data-bind="text: name"></strong>
+						<li>
+							<img class="flickr" src="img/flikr.png" alt="Flickr Logo" data-bind="click: $parent.getFlickr">
+							<strong data-bind="text: name, click: $parent.showInfo"></strong>
 							<p data-bind="text: city"></p>
 						</li>
 					</ul>
@@ -29,19 +29,19 @@
 		</div>
 		<!-- ko if: lightboxVisible -->
 		<div class="modal">
-			<div id="lightbox" data-bind="visible: lightboxVisible(true)">
+			<div class="lightbox" data-bind="visible: lightboxVisible(true)">
 				<img data-bind="attr:{src: lightboxUrl}" alt="Photo from Flickr"/>
-				<div id="hoverImage">
+				<div class="hoverImage">
 					<a id="prevLink" href="#" data-bind="click: prevPhoto"></a>
 					<a id="nextLink" href="#" data-bind="click: nextPhoto"></a>
 				</div>
-				<a id="close" href="#" data-bind="click: closeLightbox" title="Close">x</a>
+				<a class="closeBox" href="#" data-bind="click: closeLightbox" title="Close">x</a>
 			</div>
 		</div>
 		<!-- /ko -->
 
   		<script src="js/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyC9t6iaFYPEKF_QxKnNaSRjnHyP5Humu50"></script>
 		<script type="text/javascript" src="js/knockout-3.2.0.js"></script>
 		<script async type="text/javascript" src="js/app1.js"></script>
 	</body>
