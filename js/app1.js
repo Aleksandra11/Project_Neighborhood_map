@@ -124,8 +124,8 @@ var viewModel = function() {
         self.allPlaces.push(new Place(place));
     });
 
-//Use Google's Map API to get Google Street View images for each individual marker
-    var streetViewURL = 'http://maps.googleapis.com/maps/api/streetview?size=180x90&location=';
+//Use Google's Map API to get Google Street View images for each individual marker's infowindow
+    var streetViewURL = 'http://maps.googleapis.com/maps/api/streetview?size=200x100&location=';
 
 //Create and place Markers on the map with individual info windows based on data from FourSquare API
     self.allPlaces.forEach(function(place) {
@@ -137,16 +137,16 @@ var viewModel = function() {
         });
         var marker = place.marker;
         
-        marker.contentString = '<img src="'+ streetViewURL +' '+ place.lat +','+ place.lng +'&heading='+ place.headImage +'" alt="Street view image"><br><hr style="margin-bottom: 5px"><strong>'+ place.name +'</strong><br>';
+        marker.contentString = '<div class="iw-title">'+ place.name +'</div><br><img src="'+ streetViewURL +' '+ place.lat +','+ place.lng +'&heading='+ place.headImage +'" alt="Street view image"><br><hr style="margin-bottom: 2px; border-color: #48b5e9"><br>';
 
 //Adds "click" listeners onto the marker with bouncing animation and infowindow
         google.maps.event.addListener(marker,'click',(function(marker) {
             return function(){
                 map.setCenter (marker.getPosition());
                 map.setZoom(12);
-                map.panBy(-120, -140);
+                map.panBy(0, -140);
                 marker.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function(){marker.setAnimation(null);}, 3500);
+                setTimeout(function(){marker.setAnimation(null);}, 1400);
                 infowindow.setContent(marker.contentString + "<div id='content'></div>");// + "<div id='content'><br><p>' + </div>");
                 infowindow.open(map,marker);
                 getFourSquare(marker);
@@ -184,12 +184,13 @@ var viewModel = function() {
             self.toggleSign('show');
             map.panBy(80, 0);
             map.setZoom(8);
-        } 
-         else {self.toggleSign('hide');
+        }else {self.toggleSign('hide');
             map.setCenter(mapOptions.center);
             map.setZoom(10);
             map.panBy(100, 0);
             }
+        infowindow.close();
+        self.filter('');
     }
 //Center the map while resizing
     $(window).resize(function() {
@@ -200,7 +201,7 @@ var viewModel = function() {
         reset();
     });
 
-//Close infowindow when clicked on map
+//Event that closes the Info Window with a click on map
     google.maps.event.addDomListener(map, 'click', function() {
         infowindow.close();
     });
@@ -208,11 +209,11 @@ var viewModel = function() {
 //Toggle the list menu with "hide" and "show" options
     self.listToggle = function() {
         if(self.toggleSign() ==='hide'){
+            $(".list").slideUp(500);
             self.toggleSign('show');
-            $("#list").delay(500).slideUp(1000);
         } else {
             self.toggleSign('hide');
-            $("#list").slideDown(1000);
+            $(".list").slideDown(1500);
         }
     };
      
@@ -232,18 +233,27 @@ var viewModel = function() {
             self.listToggle();
         }
     }, false);
-    
+
+//Show infowindow when click on the place from list
     self.showInfo = function(place){
         var point = markers[place.num];
         center = point.getPosition();
         map.panTo(center);
         map.setZoom(12);
-        infowindow.setContent(point.title);
+        map.panBy(0, -140);
+        infowindow.setContent(point.contentString + "<div id='content'></div>");
         infowindow.open(map, point);
         point.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function(){
             point.setAnimation(null);
-        }, 3500);
+        }, 1400);
+        getFourSquare(point);
+        //Hide the list on small size screen when infowindow is open
+        if ($(window).width() <= 499) {
+            self.toggleSign('show');
+        } else {
+            self.toggleSign('hide');
+        }
     };
 
 //Additional functionality using Flickr API's to include Flickr Photos
@@ -338,20 +348,26 @@ var viewModel = function() {
     //Use async call to get foursquare data in JSON format.
         $.getJSON(fsURL, function(response){
             var venue = response.response.venues[0];
-            var phone = venue.contact.formattedPhone;
-            if(phone){
-                $fsContent.append('<p><strong>Phone: </strong>' + phone +'</p>');
-            } else {$fsContent.append('<p>Phone: Not found</p>');}
-                
-            var twitterId = venue.contact.twitter;
-            if(twitterId !== null && twitterId !== undefined){
-                $fsContent.append('<p><strong>Twitter: </strong>@'+twitterId+'</p>');
-            } else {$fsContent.append('<p>Twitter: Not found</p>');}
 
             var venueUrl = venue.url;
             if(venueUrl !== null && venueUrl !== undefined){
                 $fsContent.append('<p><strong>Website: </strong><a href=' + venueUrl + '>'+venueUrl+'</a></p>');
             } else {$fsContent.append('<p>URL: Not found</p>');}
+
+            var twitterId = venue.contact.twitter;
+            if(twitterId !== null && twitterId !== undefined){
+                $fsContent.append('<p><strong>Twitter: </strong>@'+twitterId+'</p>');
+            } else {$fsContent.append('<p>Twitter: Not found</p>');}
+
+            var phone = venue.contact.formattedPhone;
+            if(phone){
+                $fsContent.append('<p><strong>Phone: </strong>' + phone +'</p>');
+            } else {$fsContent.append('<p>Phone: Not found</p>');}
+
+            var address = venue.location.formattedAddress;
+            if(address !== null && address !== undefined){
+                $fsContent.append('<p>'+address+'</p>');
+            } else {$fsContent.append('<p>Address: Not found</p>');}
 
             }).error(function(e){
                 $fsContent.text('FourSquare results failed to load');
