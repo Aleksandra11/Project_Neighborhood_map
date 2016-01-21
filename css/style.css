@@ -1,3 +1,8 @@
+@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+[class*="fontawesome-search"]:before {
+  font-family: 'FontAwesome', sans-serif;
+}
+
 *, *:before, *:after {
 	box-sizing: border-box;
 }
@@ -19,17 +24,21 @@ h2 {
 
 .container {
 	position: absolute;
+	top: 6%;
 	margin-left: 5px;
 	margin-top: 5px;
 	z-index: 0;
 	opacity: 0.9;
 	box-sizing: border-box;
 }
-
+.search {
+	display: none;
+}
 .nav-search {
 	border: solid 2px blue;
 	background-color: white;
-	width: 280px;
+	border-radius: 6px 6px;
+	width: 272px;
 	max-height: 600px;
 }
 
@@ -51,7 +60,7 @@ h2 {
 }
 
 ul {
-	list-style-type: circle;
+	list-style-type: upper-latin;
 	-webkit-padding-start: 25px;
 }
 
@@ -105,10 +114,12 @@ input {
 }
 
 .reset {
-	position: absolute;
+	position: fixed;
 	z-index: 2;
-	width: 92%;
+	width: 10%;
 	bottom: 0;
+	right: 40px;
+	/*margin-left: 86%;*/
 }
 
 #resetMap {
@@ -241,7 +252,7 @@ input {
 }
 
 /* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+@media only screen and (min-device-width : 320px) and (max-device-width : 600px) {
 
 body {
 	font-size: large;
@@ -256,6 +267,26 @@ h2 {
 	font-size: 1em;
 }
 
+.search {
+	display: block;
+	position: fixed;
+	color: black;
+	font-size: 18px;
+	/*position: relative;*/
+    left: 30px;
+    top: 40px;
+    width: 30px;
+    background: white;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 2px solid #5c95c6;
+    padding: 7px 5px;
+}
+
+.nav-search {
+	width: 240px;
+}
+
 #resetMap {
     height: 55px;
     width: 55px;
@@ -267,7 +298,26 @@ h2 {
     margin: 0 0.5px;
 }
 
+p {
+	font-size: 10px;
+}
+
+li {
+	font-size: 12px;
+}
+
 a #nextLink, a #prevLink {
 	height: 250px;
+}
+.closeBox {
+	width: 30px;
+	height: 30px;
+	line-height: 29px;
+	font-size: 1em;
+	bottom: -10px;
+	right: -10px;
+}
+.lightbox img {
+	max-height: 300px;
 }
 }

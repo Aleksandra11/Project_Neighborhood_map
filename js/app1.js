@@ -78,6 +78,54 @@ var places = [
         }
 ];
 
+var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var labelIndex = 0;
+
+function initMap() {
+//Build the Google Map object
+    var mapOptions = {
+        zoom: 9,
+        center: {lat: 37.535977, lng: -77.47701},
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            position: google.maps.ControlPosition.LEFT_BOTTOM
+        }
+    };
+    
+    map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+
+//Reset map on click handler
+    function reset() {
+        var windowSize = $(window).width();
+        if(windowSize <= 1080) {
+            map.setCenter(mapOptions.center);
+            map.setZoom(8);
+        }if (windowSize <= 600) {
+            map.panBy(40, 0);
+            map.setZoom(9);
+        }else {
+            map.setCenter(mapOptions.center);
+            map.setZoom(10);
+            map.panBy(100, 0);
+            }
+    }
+//Center the map while resizing
+    $(window).resize(function() {
+        reset();
+    });
+
+    $("#resetMap").click(function(){
+        reset();
+    });
+
+    ko.applyBindings(new viewModel());
+}
+
+//Error handling: if the browser has trouble to load google map, display error message
+function gError() {
+    alert("Sorry, something wrong loading Google Maps. Please try reload your page.");
+}
+
 var viewModel = function() {
 	var self = this;
 	self.allPlaces = [];//stores all places in the array
@@ -91,21 +139,6 @@ var viewModel = function() {
     self.filter = ko.observable('');//stores the user input in search box
 	//self.mapMarkers = ko.observableArray([]); //holds all map markers
     self.changeTitle = ko.observable('Fun Parks near Richmond, VA');
-	
-//Error handling: if the browser has trouble to load google map, display error message
-    self.mapRequestTimeout = setTimeout(function() {
-        alert("Sorry, something wrong loading Google Maps. Please try reload your page.");
-    }, 5000);
-
-//Build the Google Map object
-    var mapOptions = {
-        zoom: 9,
-        center: {lat: 37.535977, lng: -77.47701}
-    };
-    
-    map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-
-    clearTimeout(self.mapRequestTimeout);
 
     infowindow = new google.maps.InfoWindow();
 
@@ -126,13 +159,16 @@ var viewModel = function() {
 
 //Use Google's Map API to get Google Street View images for each individual marker's infowindow
     var streetViewURL = 'http://maps.googleapis.com/maps/api/streetview?size=200x100&location=';
-
+    
 //Create and place Markers on the map with individual info windows based on data from FourSquare API
     self.allPlaces.forEach(function(place) {
+        //var image = new google.maps.MarkerImage('marker' + markerNum + '.png');
         place.marker = new google.maps.Marker({
             position: new google.maps.LatLng(place.lat, place.lng),
             map: map,
             title: place.name,
+            label: labels[labelIndex++ % labels.length],
+            //icon: image,
             animation: google.maps.Animation.DROP
         });
         var marker = place.marker;
@@ -143,13 +179,22 @@ var viewModel = function() {
         google.maps.event.addListener(marker,'click',(function(marker) {
             return function(){
                 map.setCenter (marker.getPosition());
-                map.setZoom(12);
+                map.setZoom(11);
                 map.panBy(0, -140);
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 setTimeout(function(){marker.setAnimation(null);}, 1400);
                 infowindow.setContent(marker.contentString + "<div id='content'></div>");// + "<div id='content'><br><p>' + </div>");
                 infowindow.open(map,marker);
                 getFourSquare(marker);
+                if ($(window).width() > 499 && $(window).width() <= 600) {
+                    self.changeTitle('');
+                }
+                if ($(window).width() <= 600) {
+                    self.mobileShow(false);
+                    map.panBy(0, -260);
+                } else {
+                    self.mobileShow(true);
+                }
             };
         })(marker));
         //Store markers in the markers array
@@ -173,32 +218,16 @@ var viewModel = function() {
         } else {
             self.toggleSign('hide');
         }
-    }
-//Reset map on click handler
-    function reset() {
-        var windowSize = $(window).width();
-        if(windowSize <= 1080) {
-            map.setCenter(mapOptions.center);
-            map.setZoom(8);
-        }if (windowSize <= 499) {
-            self.toggleSign('show');
-            map.panBy(80, 0);
-            map.setZoom(8);
-        }else {self.toggleSign('hide');
-            map.setCenter(mapOptions.center);
-            map.setZoom(10);
-            map.panBy(100, 0);
-            }
         infowindow.close();
-        self.filter('');
+        //self.filter('');
     }
-//Center the map while resizing
-    $(window).resize(function() {
-        reset();
-    });
 
+//Control the list while resizing
+    $(window).resize(function() {
+        checkWindow();
+    });
     $("#resetMap").click(function(){
-        reset();
+        checkWindow();
     });
 
 //Event that closes the Info Window with a click on map
@@ -234,6 +263,14 @@ var viewModel = function() {
         }
     }, false);
 
+    self.mobileShow = ko.observable(true);
+    self.toggleSearch = function() {
+        if(self.mobileShow() === true) {
+            self.mobileShow(false);
+        } else {
+            self.mobileShow(true);
+        }
+    };
 //Show infowindow when click on the place from list
     self.showInfo = function(place){
         var point = markers[place.num];
@@ -251,8 +288,16 @@ var viewModel = function() {
         //Hide the list on small size screen when infowindow is open
         if ($(window).width() <= 499) {
             self.toggleSign('show');
+            self.mobileShow(false);
+            map.panBy(0, -260);
         } else {
             self.toggleSign('hide');
+            self.mobileShow(true);
+        }
+        if ($(window).width() > 499 && $(window).width() <= 600) {
+            self.mobileShow(false);
+            map.panBy(0, -260);
+            self.changeTitle('');
         }
     };
 
@@ -334,6 +379,9 @@ var viewModel = function() {
         self.visiblePlaces().forEach(function(place) {
             place.marker.setVisible(true);
         });
+        if ($(window).width() <= 499) {
+            self.toggleSign('hide');
+        }
     };
 
 //To show the unique information about a location in an infowindow for each marker from FourSquare API
@@ -375,5 +423,3 @@ var viewModel = function() {
             });
     };
 };
-
-ko.applyBindings(new viewModel());
