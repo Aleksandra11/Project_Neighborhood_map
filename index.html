@@ -9,7 +9,10 @@
 	<body>
 		<div id="map-canvas"></div>
 		<h2 id="title" data-bind="text: changeTitle"></h2>
-		<div class="container">
+		<div class="search" title="search bar" data-bind="click: toggleSearch, visible: mobileShow() === false">
+			<span class="fontawesome-search" style="cursor:pointer"></span>
+		</div>
+		<div class="container" data-bind="visible: mobileShow() === true">
 			<div class="nav-search">
 				<span class="toggle" data-bind="text: toggleSign, click: listToggle"></span>
 				<input class="controls" placeholder="Find your place...." type="text" data-bind="textInput: filter, event: {keyup: filterMarkers}">
@@ -41,8 +44,9 @@
 		<!-- /ko -->
 
   		<script src="js/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyC9t6iaFYPEKF_QxKnNaSRjnHyP5Humu50"></script>
+		
 		<script type="text/javascript" src="js/knockout-3.2.0.js"></script>
 		<script async type="text/javascript" src="js/app1.js"></script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyC9t6iaFYPEKF_QxKnNaSRjnHyP5Humu50&callback=initMap" onerror="gError()" async defer></script>
 	</body>
 </html>
